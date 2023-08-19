@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <h1><b>GET UR TRAIN</b></h1>
+
+    <style>
+    body {
+            background-image: url('https://images7.alphacoders.com/661/661783.jpg');
+            background-size: cover;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            text-align: center;
+            color: rgb(219, 80, 80);
+            margin-top: 50px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 5);
+
+        }
+
+        form {
+            background-color: rgba(255, 255, 255, 0.4);
+            padding: 20px;
+            border-radius: 10px;
+            width: 450px;
+        }
+
+        #tableContainer {
+            background-color: rgba(255, 255, 255, 0.6);
+            padding: 10px;
+            border-radius: 10px;
+            width: 400px;
+            margin: 10px;
+        }
+    </style>
+ <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<center>
+
+    <body>
+        <div class="d-flex align-items-center">
+            <center>
+                <form onsubmit="return false;">
+                    <label><B>FROM</B></label>
+                   <select id="sel"> 
+                        <option option value="">
+                            
+                        </option>
+                    </select>
+                    <label><B>TO</B></label>
+                     <select id="to"> 
+                        <option option value="">
+                            
+                        </option>
+                    </select>
+                    </br>
+                   
+                    <p><B>DATE</B><input type="date" id="d"></p>
+
+                    <button onclick="searchtrain()">search</button>
+                    </br></br>
+                    <label><B>TRAIN NAME</B></label>
+                    <select id="drop"> 
+                        <option option value="">
+                            get ur train
+                        </option>
+                    </select>
+                    </br></br>
+                    <label><B>CLASS</B></label>
+                    <select>
+                        <option>genral</option>
+                        <option>AC TIRE 1</option>
+                        <option>AC TIRE 2</option>
+                        <option>AC TIRE 3</option>
+                    </SELECT>
+
+            </center>
+            </form>
+
+
+            <table id="tt">
+				</br>
+                <thead class="sai"><b><u>PASSENGER DETAILS</u></b></thead></br></br>
+                <tr>
+                    <th>NAME</th>
+                    <th>GENDER</th>
+                    <th>AGE</th>
+                </tr>
+                <tr>
+                    <td><input type="text" id="na" ></td>
+                    <td><select id="se">
+                            <option>--select--</option>
+                            <option>male</option>
+                            <option>female</option>
+                    </td>
+                    <td><input type="text" id="ag"></td>
+                </tr>
+                <tbody id="tb">
+                </tbody>
+            </table></br>
+            <button onclick="booking()">book</button>
+            <button id="b1" onclick="addtkt()">add</button>
+            <div class="sai" id="tableContainer"></div>
+            </br></br>
+
+            <table id="new">
+            </table>
+            <script>
+				$(document).ready(function(){
+					console.log("hhhhhhhhhh");
+					var xhr=new XMLHttpRequest();
+				xhr.open("GET","Trainservlet",true);
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState===4 ){
+						var sai=JSON.parse(xhr.responseText);
+						console.log(sai);
+						updatedrop(sai);
+					}
+				}	
+					xhr.send();		
+				function updatedrop(data) {
+                    var dat = data;
+                    var dr = document.getElementById("sel");
+                    dr.innerHTML = '< option value=""></option>';
+                        var option = document.createElement("option");
+                        data.forEach(function(val)
+                        {
+							var option = document.createElement("option");
+							option.value=val;
+							option.textContent=val.data;
+							sel.appendChild(option);
+						}
+                        )
+                }
+
+				}) ;
+				
+				
+				$(document).ready(function(){
+					var xhr=new XMLHttpRequest();
+				xhr.open("GET","Trainservlet",true);
+				xhr.onreadystatechange=function(){
+					if(xhr.readyState===4 ){
+						var n=JSON.parse(xhr.responseText);
+						console.log(n);
+						updatedrop(n);
+					}
+				}	
+					xhr.send();		
+				function updatedrop(data) {
+                    var dat = data;
+                    var dr = document.getElementById("to");
+                    dr.innerHTML = '< option value=""></option>';
+                        var option = document.createElement("option");
+                        data.forEach(function(val)
+                        {console.log(" namsthe"+val);
+							var option = document.createElement("option");
+							option.value=val;
+							option.textContent=val.data;
+							console.log("entiiiiii"+val.data);
+							console.log(option);
+							to.appendChild(option);
+						}
+                        )
+                }
+				}) ;
+					
+				function searchtrain(){
+					var from =document.getElementById("sel");
+					var fv = from.options[from.selectedIndex].value;
+					var tf = from.options[from.selectedIndex].text;
+					console.log(tf);
+					var to =document.getElementById("to");
+					var tv = to.options[to.selectedIndex].value;
+					var tt = to.options[to.selectedIndex].text;
+					console.log(tt);
+					var xhrr=new XMLHttpRequest();
+					xhrr.open('GET','Selectservlet?from='+tf+'&to='+tt,true);
+					xhrr.onreadystatechange=function(){
+						if(xhrr.readyState===4 && xhrr.status===200){
+							
+               					 var trains = JSON.parse(xhrr.responseText);
+               					 console.log(trains);
+                				update(trains);
+           					
+						}
+					};
+					xhrr.send();
+				}
+				
+				function update(data) {
+                    var dr = document.getElementById("drop");
+                    dr.innerHTML = '< option value=""></option>';
+                        var option = document.createElement("option");
+                        data.forEach(function(val)
+                        {  console.log("hi namsthe"+val);
+							var option = document.createElement("option");
+							console.log(val);
+							option.value=val;
+							option.textContent=val.data;
+							console.log("entiiiiii"+val);
+							console.log(option);
+							drop.appendChild(option);
+						})
+                        
+                }
+				
+				function booking() {
+   					 const tablee = document.getElementById("dataTable");
+  					  const rows = tablee.getElementsByTagName("tr"); 
+   						 var rowArray = []; 
+    					for (var i = 0; i < rows.length; i++) {
+        					rowArray.push(rows[i]);  
+   							 }
+							 console.log("rows array"+rowArray);
+					
+					for(var i=1;i<rowArray.length;i++){
+						var cells=rowArray[i].getElementsByTagName("td");
+						var data={
+							cell1:cells[0].innerText,
+							cell2:cells[1].innerText,
+							cell3:cells[2].innerText
+						};
+						requesttobook(data);
+					}
+				}
+					
+				function requesttobook(data){
+					var xhr=new XMLHttpRequest();
+					xhr.open("POST","Bookingservlet",true);
+					xhr.onreadystatechange=function(){
+						if(xhr.readyState===4 && xhr.status===200){
+							console.log("request sent");
+						}
+						
+					};
+					console.log(" stringify data  "+JSON.stringify(data));
+					xhr.send(JSON.stringify(data));
+				}
+				
+				
+				
+				
+				
+                let tableVisible = 0;
+                var i = 0;
+                var count=0;
+                function addtkt() {
+                    var name = document.getElementById("na").value;
+                    var gender = document.getElementById("se").value;
+                    var ages = document.getElementById("ag").value;
+                    console.log(ages);
+                     if (name === '' || gender === '' || ages===''){
+                        alert("enter the required fields");
+                        return;
+
+                    }
+                    var age=parseInt(ages)
+                   
+
+                    if(age === '' || age > 100 || age < 0){
+                    	 alert("enter valid age");
+                        return;
+                    }
+                    
+                    if (tableVisible == 0) {
+                        createTable();
+                    }
+                    tableVisible++;
+                    const tabl = document.getElementById("dataTable");
+                    if (i < 6) {
+                        var r = tabl.insertRow();
+                        r.setAttribute('id',i);
+                        var c1 = r.insertCell();
+                        var c2 = r.insertCell();
+                        var c3 = r.insertCell();
+                        var c4 = r.insertCell();
+                        c1.textContent = name;
+                        c2.textContent = gender;
+                        c3.textContent = age;
+                        c4.innerHTML = '<button onclick="remove(this.parentNode.parentNode)">Delete</button>';
+                        
+                        i++;
+                        count++;
+                        
+
+                    }
+                   
+                    document.getElementById('na').value = "";
+                    document.getElementById('se').value = "";
+                    document.getElementById('ag').value = "";
+					console.log("mmmmm"+count);
+                }
+                 
+                
+                function createTable() {
+                    const tableContainer = document.getElementById('tableContainer');
+                    const table = document.createElement('table');
+                    table.setAttribute('id', 'dataTable');
+                    const row = table.insertRow();
+                    ['Name', 'Gender', 'Age'].forEach((x) => {
+                        const cell = row.insertCell();
+                        cell.textContent = x;
+                    });
+                    tableContainer.appendChild(table);
+                }
+
+                function remove(row) {
+                    const table = document.getElementById('dataTable');
+                    table.deleteRow(row.rowIndex);
+                    tableVisible--;
+                    i--;
+                    if (tableVisible == 0) table.parentNode.removeChild(table);
+                }
+            
+
+</script>
+        </div>
+</center>
+</body>
+
+</html>
